@@ -1,7 +1,7 @@
 # Desarrollo: activa herramientas de desarrollo y monta los addons editables.
 services:
   web:
-    command: ["--dev=all"]
+    command: ["--dev=all", "-i", "base"]
     volumes:
       - ./addons:/mnt/extra-addons
       - odoo_data:/var/lib/odoo

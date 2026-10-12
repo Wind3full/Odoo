@@ -8,14 +8,17 @@ services:
     expose:
       - "8069"
     volumes:
-      - ./addons:/mnt/extra-addons:ro
+      - ./addons:/mnt/extra-addons
       - odoo_data:/var/lib/odoo
       - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
     environment:
-      HOST: db
-      USER: ${POSTGRES_USER:-odoo}
-      PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
-    restart: unless-stopped
+      - HOST=db
+      - USER=${POSTGRES_USER:-odoo}
+      - PASSWORD=${POSTGRES_PASSWORD}
+      - DB_NAME=${POSTGRES_DB:-odoo}
+    ports:
+      - "127.0.0.1:${ODOO_PORT:-8069}:8069"
+    command: ["--dev=all"]
 
   db:
     image: postgres:18
