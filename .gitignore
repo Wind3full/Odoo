@@ -1,0 +1,19 @@
+# Variables y secretos locales
+.env
+.env.*
+!.env.example
+secrets/*
+!secrets/.gitkeep
+
+# Datos persistentes, registros y sesiones
+volumesOdoo/
+data/
+filestore/
+sessions/
+*.log
+
+# Entorno local y archivos del sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

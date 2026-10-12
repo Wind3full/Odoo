@@ -1,0 +1,19 @@
+# Producción: no activa el modo de desarrollo ni publica PostgreSQL al anfitrión.
+services:
+  web:
+    command: []
+    ports:
+      - "127.0.0.1:${ODOO_PORT:-8069}:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons:ro
+      - odoo_data:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
+    restart: unless-stopped
+
+  db:
+    ports: []
+    restart: unless-stopped

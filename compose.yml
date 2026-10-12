@@ -1,0 +1,37 @@
+# Configuración común de Odoo 19 y PostgreSQL 18
+services:
+  web:
+    image: odoo:19
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8069"
+    volumes:
+      - ./addons:/mnt/extra-addons:ro
+      - odoo_data:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+    environment:
+      HOST: db
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
+    restart: unless-stopped
+
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: ${POSTGRES_DB:-odoo}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  odoo_data:
+  postgres_data:
